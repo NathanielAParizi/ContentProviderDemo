@@ -30,46 +30,49 @@ class CelebrityDatabaseHelper(context: Context) :
         database.close()
     }
 
-    fun getCelebrityFromDatabase(id: String): Celebrity? {
-
+    fun getOnePersonFromDatabase(ssn : String) : Celebrity? {
         val database = readableDatabase
-        var celebrity: Celebrity? = null
-        val cursor = database.rawQuery(
-            "SELECT * FROM $TABLE_NAME " +
-                    "WHERE $COL_ID = '$id'", null
-        )
+        var celebrity : Celebrity? = null
+        val cursor = database
+            .rawQuery("SELECT * FROM $TABLE_NAME WHERE $COL_ID = '$ssn'",
+                null)
 
-        if (cursor.moveToFirst()) {
+        if(cursor.moveToFirst()) {
+
             val firstName = cursor.getString(cursor.getColumnIndex(COL_FIRST_NAME))
             val lastName = cursor.getString(cursor.getColumnIndex(COL_LAST_NAME))
             val job = cursor.getString(cursor.getColumnIndex(COL_JOB))
             val favorite = cursor.getString(cursor.getColumnIndex(COL_FAVORITE))
             val id = cursor.getString(cursor.getColumnIndex(COL_ID))
-        }
+            celebrity = Celebrity(firstName, lastName, job, favorite, id)
 
+
+        }
         cursor.close()
         database.close()
         return celebrity
-
     }
 
-    fun getAllCelebrities(): ArrayList<Celebrity> {
 
+    fun getAllCelebrities(): ArrayList<Celebrity> {
         val database = readableDatabase
-        var celebList = ArrayList<Celebrity>()
+        var celebList: ArrayList<Celebrity> = ArrayList()
         val cursor = database
-            .rawQuery("SELECT * FROM $TABLE_NAME", null)
+            .rawQuery(
+                "SELECT * FROM $TABLE_NAME",
+                null
+            )
 
         if (cursor.moveToFirst()) {
-
             do {
-
                 val firstName = cursor.getString(cursor.getColumnIndex(COL_FIRST_NAME))
                 val lastName = cursor.getString(cursor.getColumnIndex(COL_LAST_NAME))
                 val job = cursor.getString(cursor.getColumnIndex(COL_JOB))
                 val favorite = cursor.getString(cursor.getColumnIndex(COL_FAVORITE))
-                val id = cursor.getString(cursor.getColumnIndex(COL_ID))
 
+                val id = cursor.getString(cursor.getColumnIndex(COL_ID))
+                val celebrity = Celebrity(firstName, lastName, job, favorite, id)
+                celebList.add(celebrity)
             } while (cursor.moveToNext())
         }
 
@@ -93,7 +96,7 @@ class CelebrityDatabaseHelper(context: Context) :
 
     }
 
-    fun removePersonFromDatabase(id : String) {
+    fun removePersonFromDatabase(id: String) {
         val database = writableDatabase
         database.delete(TABLE_NAME, "$COL_ID = ?", arrayOf(id))
         database.close()

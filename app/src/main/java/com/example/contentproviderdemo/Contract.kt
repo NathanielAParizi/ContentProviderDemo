@@ -16,7 +16,10 @@ const val COL_ID = "id"
 // Create Table
 
 const val CREATE_CELEBRITY_TABLE =
-    "CREATE TABLE $TABLE_NAME = ( $COL_FIRST_NAME String, $COL_LAST_NAME String, $COL_JOB String," +
-            " $COL_FAVORITE String," +
+    "CREATE TABLE $TABLE_NAME (" +
+            "$COL_FIRST_NAME String," +
+            "$COL_LAST_NAME String," +
+            "$COL_JOB String," +
+            "$COL_FAVORITE String," +
             "$COL_ID String PRIMARY_KEY)"
 
